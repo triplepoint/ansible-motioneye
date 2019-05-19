@@ -1,0 +1,61 @@
+---
+- name: Ensure Docker-related python packages are present
+  pip: name=docker
+
+- name: Ensure the config directories are present
+  file: path="{{ item }}" state=directory mode=0755
+  with_items:
+    - /etc/motioneye
+    - "{{ motioneye_mask_directory }}"
+    - /opt/motioneye
+  notify: restart motioneye
+
+- name: Ensure all the service configuration files are in place
+  template: src="{{ item.src }}" dest="/etc/motioneye/{{ item.dest }}" mode=0600
+  with_items: "{{ motioneye_template_files + motioneye_camera_template_files }}"
+  notify: restart motioneye
+
+- name: Ensure all the camera mask files are present
+  copy:
+    src: "{{ item }}"
+    dest: "{{ motioneye_mask_directory }}/{{ item | basename }}"
+    mode: '0600'
+  with_items: "{{ motioneye_mask_files }}"
+  notify: restart motioneye
+
+- name: Define the default service Docker volumes
+  set_fact:
+    _motioneye_docker_volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/motioneye:/etc/motioneye"
+      - "/opt/motioneye:/var/lib/motioneye"
+
+- name: Append any additional volume mounts
+  set_fact:
+    _motioneye_docker_volumes: "{{ _motioneye_docker_volumes }} + {{ motioneye_additional_volumes }}"
+
+- name: Identify the directly published ports
+  when: motion_enable_direct_motion_interface
+  set_fact:
+    _motioneye_docker_published_ports:
+      - 7999:7999    # motion direct web admin panel
+      - 8081:8081    # Direct camera streaming access
+
+- name: Identify the directly published ports, part 2
+  when: not motion_enable_direct_motion_interface
+  set_fact:
+    _motioneye_docker_published_ports: []
+
+- name: ensure the service container is started
+  docker_container:
+    name: motioneye
+    hostname: motioneye
+    image: "ccrisan/motioneye:{{ motioneye_docker_version }}"
+    state: started
+    restart_policy: always
+    timeout: 300
+    exposed_ports:
+      - "8765"
+    published_ports: "{{ _motioneye_docker_published_ports }}"
+    volumes: "{{ _motioneye_docker_volumes }}"
+    env: "{{ motioneye_environment_variables }}"

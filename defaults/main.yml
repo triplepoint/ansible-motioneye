@@ -1,0 +1,61 @@
+---
+# The admin user's name
+motioneye_admin_user_name: admin
+
+# The admin user's password.  Can be blank.
+motioneye_admin_password: somepassword
+
+# The admin user's name
+motioneye_user_name: user
+
+# The admin user's password.  Can be blank to not require a password.
+motioneye_user_password: someuserpassword
+
+# What version of the ccrisan/motioneye docker image should we
+# install?
+motioneye_docker_version: master-amd64
+
+# A debug mode, principally useful for tuning the motion detection
+# behavior.
+motion_enable_direct_motion_interface: false
+
+# A list of src and dest values that define configuration templates to be
+# rendered into the  configuration directory.
+# The `dest` values should be file names without the path, and the `src`
+# values should be any resolveable Ansible template file path.
+#
+# For details on how to configure motion and motioneye,
+# See https://motion-project.github.io/motion_config.html
+# and https://github.com/ccrisan/motioneye/wiki/Configuration-File
+motioneye_template_files:
+  - src: motion.conf.j2
+    dest: motion.conf
+  - src: motioneye.conf.j2
+    dest: motioneye.conf
+
+# A set of template files, one for each camera.  Works the same as
+# the template file above, except that these also get listed as
+# imports in the motion.conf template.
+motioneye_camera_template_files: []
+  # - src: camera-1.conf.j2
+  #   dest: camera-1.conf
+
+# The directory in which the mask files are copied.
+# NOTE: Leave no trailing /.
+motioneye_mask_directory: /etc/motioneye/masks
+
+# A set of mask files that are delivered to `motioneye_mask_directory`,
+# for use in masking out regions of the cameras.
+motioneye_mask_files: []
+  # - camera-mask1.pgm
+  # - camera-mask2.pgm
+
+# A list of additional volumes to mount into the docker container.  This is
+# useful for things like SSL certificates and custom css/image assets.
+motioneye_additional_volumes: []
+# - "/some/directory:/some/mount:ro"
+# - "/some/file.yml:/some/mount/file.yml:ro"
+
+# A key/value set of environment variables and their values, which will be
+# set on the docker container.
+motioneye_environment_variables: {}

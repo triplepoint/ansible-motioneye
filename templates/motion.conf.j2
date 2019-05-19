@@ -1,0 +1,27 @@
+# @enabled on
+# @show_advanced on
+# @admin_username {{ motioneye_admin_user_name }}
+# @admin_password {{ motioneye_admin_password }}
+# @normal_username {{ motioneye_user_name }}
+# @normal_password {{ motioneye_user_password }}
+
+setup_mode off
+webcontrol_port 7999
+webcontrol_parms 2
+
+{% if not motion_enable_direct_motion_interface %}
+# The normal behavior for motioneye to make use of motion
+webcontrol_interface 1
+webcontrol_localhost on
+stream_preview_method 0
+{% else %}
+# Temporary config to allow for direct use of the admin panel
+webcontrol_interface 0
+webcontrol_localhost off
+stream_preview_method 3
+{% endif %}
+
+# Import camera configs
+{% for camera_file in motioneye_camera_template_files %}
+camera {{ camera_file.dest }}
+{% endfor %}

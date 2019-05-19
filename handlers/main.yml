@@ -1,0 +1,15 @@
+---
+- name: restart motioneye
+  docker_container:
+    name: motioneye
+    hostname: motioneye
+    image: "ccrisan/motioneye:{{ motioneye_docker_version }}"
+    state: started
+    restart_policy: always
+    timeout: 300
+    exposed_ports:
+      - "8765"
+    published_ports: "{{ _motioneye_docker_published_ports }}"
+    volumes: "{{ _motioneye_docker_volumes }}"
+    env: "{{ motioneye_environment_variables }}"
+    restart: true
