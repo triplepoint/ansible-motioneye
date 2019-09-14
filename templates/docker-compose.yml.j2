@@ -1,0 +1,26 @@
+version: '3.7'
+services:
+  motioneye:
+    image: ccrisan/motioneye:{{ motioneye_docker_version }}
+    container_name: motioneye
+    hostname: motioneye
+    restart: always
+    expose:
+      - "8765"
+    ports:
+{% for port in _motioneye_docker_published_ports %}
+      - {{ port }}
+{% endfor %}
+    volumes:
+{% for vol in _motioneye_docker_volumes %}
+      - {{ vol }}
+{% endfor %}
+    environment:
+{% for k, v in motioneye_environment_variables.items() %}
+      - {{ k }}={{ v }}
+{% endfor %}
+{% if motioneye_external_default_network %}
+networks:
+  {{ motioneye_external_default_network }}:
+    external: true
+{% endif %}

@@ -1,6 +1,9 @@
 ---
-- name: Ensure Docker-related python packages are present
-  pip: name=docker
+- name: Ensure Docker-related Python packages are present
+  pip:
+    name:
+      - docker
+      - docker-compose
 
 - name: Ensure the config directories are present
   file: path="{{ item }}" state=directory mode=0755
@@ -46,16 +49,14 @@
   set_fact:
     _motioneye_docker_published_ports: []
 
-- name: ensure the service container is started
-  docker_container:
-    name: motioneye
-    hostname: motioneye
-    image: "ccrisan/motioneye:{{ motioneye_docker_version }}"
-    state: started
-    restart_policy: always
-    timeout: 300
-    exposed_ports:
-      - "8765"
-    published_ports: "{{ _motioneye_docker_published_ports }}"
-    volumes: "{{ _motioneye_docker_volumes }}"
-    env: "{{ motioneye_environment_variables }}"
+- name: Ensure the docker-compose template directory exists
+  file: state=directory path="/opt/ansible-docker-compose/motioneye"
+
+- name: Ensure this service's docker-compose template is present
+  template:
+    src: docker-compose.yml.j2
+    dest: /opt/ansible-docker-compose/motioneye/docker-compose.yml
+
+- name: Ensure the service container(s) is/are started
+  docker_compose:
+    project_src: /opt/ansible-docker-compose/motioneye
