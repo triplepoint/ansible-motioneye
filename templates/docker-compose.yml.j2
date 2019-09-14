@@ -7,7 +7,8 @@ services:
     restart: always
     expose:
       - "8765"
-    ports:
+    ports: {% if not _motioneye_docker_published_ports %}[]
+{% endif %}
 {% for port in _motioneye_docker_published_ports %}
       - {{ port }}
 {% endfor %}
