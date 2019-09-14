@@ -11,6 +11,10 @@ services:
 {% for port in _motioneye_docker_published_ports %}
       - {{ port }}
 {% endfor %}
+{% if motioneye_external_default_network %}
+    networks:
+      - {{ motioneye_external_default_network }}
+{% endif %}
     volumes:
 {% for vol in _motioneye_docker_volumes %}
       - {{ vol }}
