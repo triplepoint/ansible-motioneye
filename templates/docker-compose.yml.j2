@@ -9,11 +9,12 @@ services:
 {% for label in motioneye_container_labels %}
       - {{ label }}
 {% endfor %}
+{% endif %}
     restart: always
     expose:
       - "8765"
-    ports: {% if not _motioneye_docker_published_ports %}[]
-{% endif %}
+    ports: {% if not _motioneye_docker_published_ports %}[]{% endif %}
+
 {% for port in _motioneye_docker_published_ports %}
       - {{ port }}
 {% endfor %}
@@ -25,10 +26,12 @@ services:
 {% for vol in _motioneye_docker_volumes %}
       - {{ vol }}
 {% endfor %}
+{% if motioneye_environment_variables %}
     environment:
 {% for k, v in motioneye_environment_variables.items() %}
       - {{ k }}={{ v }}
 {% endfor %}
+{% endif %}
 {% if motioneye_network_name %}
 networks:
   {{ motioneye_network_name }}:
