@@ -4,6 +4,11 @@ services:
     image: ccrisan/motioneye:{{ motioneye_docker_version }}
     container_name: motioneye
     hostname: motioneye
+{% if motioneye_container_labels %}
+    labels:
+{% for label in motioneye_container_labels %}
+      - {{ label }}
+{% endfor %}
     restart: always
     expose:
       - "8765"
@@ -12,9 +17,9 @@ services:
 {% for port in _motioneye_docker_published_ports %}
       - {{ port }}
 {% endfor %}
-{% if motioneye_external_default_network %}
+{% if motioneye_network_name %}
     networks:
-      - {{ motioneye_external_default_network }}
+      - {{ motioneye_network_name }}
 {% endif %}
     volumes:
 {% for vol in _motioneye_docker_volumes %}
@@ -24,8 +29,8 @@ services:
 {% for k, v in motioneye_environment_variables.items() %}
       - {{ k }}={{ v }}
 {% endfor %}
-{% if motioneye_external_default_network %}
+{% if motioneye_network_name %}
 networks:
-  {{ motioneye_external_default_network }}:
+  {{ motioneye_network_name }}:
     external: true
 {% endif %}

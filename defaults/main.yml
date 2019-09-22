@@ -62,4 +62,7 @@ motioneye_environment_variables: {}
 
 # If set to a string, the created Docker container will attach to a
 # pre-existing default Docker network, instead of creating its own.
-motioneye_external_default_network: ""
+motioneye_network_name: ""
+
+# Labels to put on the application containers
+motioneye_container_labels: []
