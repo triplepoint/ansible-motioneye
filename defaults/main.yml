@@ -13,7 +13,8 @@ motioneye_user_password: someuserpassword
 
 # What version of the ccrisan/motioneye docker image should we
 # install?
-motioneye_docker_version: master-amd64
+# https://hub.docker.com/r/ccrisan/motioneye/
+motioneye_docker_version: "master-amd64"
 
 # A debug mode, principally useful for tuning the motion detection
 # behavior.
