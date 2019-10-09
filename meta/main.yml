@@ -1,5 +1,6 @@
 ---
 galaxy_info:
+  role_name: motioneye
   author: Jonathan Hanson
   description: The Motion and Motioneye camera monitoring tools
   license: MIT
