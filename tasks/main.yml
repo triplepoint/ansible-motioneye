@@ -6,7 +6,10 @@
       - docker-compose
 
 - name: Ensure the config directories are present
-  file: path="{{ item }}" state=directory mode=0755
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
   with_items:
     - /etc/motioneye
     - "{{ motioneye_mask_directory }}"
@@ -14,7 +17,10 @@
   notify: restart motioneye
 
 - name: Ensure all the service configuration files are in place
-  template: src="{{ item.src }}" dest="/etc/motioneye/{{ item.dest }}" mode=0600
+  template:
+    src: "{{ item.src }}"
+    dest: "/etc/motioneye/{{ item.dest }}"
+    mode: 0600
   with_items: "{{ motioneye_template_files + motioneye_camera_template_files }}"
   notify: restart motioneye
 
@@ -50,7 +56,9 @@
     _motioneye_docker_published_ports: []
 
 - name: Ensure the docker-compose template directory exists
-  file: state=directory path="/opt/ansible-docker-compose/motioneye"
+  file:
+    state: directory
+    path: "/opt/ansible-docker-compose/motioneye"
 
 - name: Ensure this service's docker-compose template is present
   template:
