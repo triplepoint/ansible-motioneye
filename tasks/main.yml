@@ -28,7 +28,7 @@
   copy:
     src: "{{ item }}"
     dest: "{{ motioneye_mask_directory }}/{{ item | basename }}"
-    mode: '0600'
+    mode: 0600
   with_items: "{{ motioneye_mask_files }}"
   notify: restart motioneye
 
