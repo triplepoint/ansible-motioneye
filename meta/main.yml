@@ -1,6 +1,7 @@
 ---
 galaxy_info:
   role_name: motioneye
+  namespace: triplepoint
   author: Jonathan Hanson
   description: The Motion and Motioneye camera monitoring tools
   license: MIT
