@@ -35,7 +35,7 @@
 
 - name: Append any additional volume mounts
   set_fact:
-    _motioneye_docker_volumes: "{{ _motioneye_docker_volumes }} + {{ motioneye_additional_volumes }}"
+    _motioneye_docker_volumes: "{{ _motioneye_docker_volumes | union(motioneye_additional_volumes) }}"
 
 - name: Identify the directly published ports
   when: motion_enable_direct_motion_interface
